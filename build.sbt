@@ -1,8 +1,8 @@
 organization := "com.kifi"
 
-name := "json-annotation"
+name := "slack-client"
 
-version := "0.2"
+version := "0.1"
 
 scalaVersion := "2.11.1"
 
@@ -21,8 +21,9 @@ libraryDependencies ++= (
 )
 
 libraryDependencies ++= Seq(
-  "com.typesafe.play" %% "play-json" % "2.3.1" % Test,
-  "org.specs2" %% "specs2" % "2.3.13" % Test
+  "com.typesafe.play" %% "play-json" % "2.3.1",
+  "org.specs2" %% "specs2" % "2.3.13",
+  "com.typesafe.play" %% "play-ws" % "2.4.3"
 )
 
 unmanagedSourceDirectories in Compile <+= (sourceDirectory in Compile, scalaBinaryVersion){
@@ -48,7 +49,7 @@ publishArtifact in Test := false
 pomIncludeRepository := { _ => false }
 
 pomExtra := (
-  <url>https://github.com/kifi/json-annotation</url>
+  <url>https://github.com/kifi/slack-client</url>
   <licenses>
     <license>
       <name>MIT</name>
@@ -57,8 +58,8 @@ pomExtra := (
     </license>
   </licenses>
   <scm>
-    <url>git@github.com:kifi/json-annotation.git</url>
-    <connection>scm:git:git@github.com:kifi/json-annotation.git</connection>
+    <url>git@github.com:kifi/slack-client.git</url>
+    <connection>scm:git:git@github.com:kifi/slack-client.git</connection>
   </scm>
   <developers>
     <developer>
@@ -67,3 +68,4 @@ pomExtra := (
       <url>https://github.com/martinraison</url>
     </developer>
   </developers>)
+
