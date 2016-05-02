@@ -2,6 +2,7 @@ package com.keepit.slack.models
 
 import org.joda.time.LocalDate
 import play.api.libs.json.{Json, Reads}
+import scala.language.implicitConversions
 
 case class SlackSearchRequest(query: SlackSearchRequest.Query, optional: SlackSearchRequest.Param*)
 
@@ -12,9 +13,6 @@ object SlackSearchRequest {
   object Query {
     val trivial = Query("")
     def apply(queries: Option[Query]*): Query = Query(queries.flatten.map(_.query).mkString(" "))
-
-    implicit def toOption(q: Query): Option[Query] = Some(q)
-    implicit def fromString(query: String): Query = Query(query)
     def in(channelName: SlackChannelName) = Query(s"in:#${channelName.value.stripPrefix("#").stripPrefix("@")}")
     def from(username: SlackUsername) = Query(s"from:${username.value}")
     def before(date: LocalDate) = Query(s"before:$date")

@@ -1,16 +1,22 @@
 package com.keepit.slack
 
+import java.net.URLEncoder
+
 import com.keepit.slack.models._
 import play.api.http.Status
 import play.api.libs.json._
 import play.api.libs.ws.ning.NingWSClient
+import scala.language.implicitConversions
 
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success}
 
 object SlackAPI {
   final case class Param(key: String, value: String)
-  case class Route(path: String, params: Param*)
+  final case class Route(path: String, params: Param*) {
+    def url: String = path + "?" + params.map {
+      case Param(k, v) => URLEncoder.encode(k, "UTF-8") + "=" + URLEncoder.encode(v, "UTF-8")
+    }.mkString
+  }
 
   val OK: String = "ok"
   val NoService: String = "No service"
