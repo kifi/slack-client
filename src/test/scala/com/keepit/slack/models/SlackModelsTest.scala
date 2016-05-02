@@ -59,7 +59,7 @@ class SlackModelsTest extends Specification {
         res.lastActivity === None
       }
       "auth.access" in {
-        Json.parse( // In principle, posting my personal Slack access token is a bad idea, but I like to live dangerously
+        Json.parse(
           """
             |{
             |  "ok": true,

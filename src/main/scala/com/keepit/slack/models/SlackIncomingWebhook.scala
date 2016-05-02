@@ -1,5 +1,6 @@
 package com.keepit.slack.models
 
+import com.keepit.slack.SlackAPI.Param
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
@@ -29,16 +30,19 @@ final case class SlackMessageRequest( // https://api.slack.com/incoming-webhooks
   def quiet = this.copy(unfurlLinks = false, unfurlMedia = false)
   def fromUser = this.copy(asUser = true)
   def withAttachments(newAttachments: Seq[SlackAttachment]) = this.copy(attachments = newAttachments)
-  def asUrlParams: Seq[(String, String)] = Seq(
-    "text" -> text,
-    "attachments" -> Json.stringify(Json.toJson(attachments)),
-    "username" -> username,
-    "icon_url" -> iconUrl,
-    "as_user" -> asUser.toString,
-    "unfurl_links" -> unfurlLinks.toString,
-    "unfurl_media" -> unfurlMedia.toString,
-    "parse" -> parseMode
-  )
+  def asUrlParams: Seq[Param] = {
+    import com.keepit.slack.SlackAPI.SlackParams._
+    Seq[Param](
+      "text" -> text,
+      "attachments" -> Json.stringify(Json.toJson(attachments)),
+      "username" -> username,
+      "icon_url" -> iconUrl,
+      "as_user" -> asUser.toString,
+      "unfurl_links" -> unfurlLinks.toString,
+      "unfurl_media" -> unfurlMedia.toString,
+      "parse" -> parseMode
+    )
+  }
 }
 
 object SlackMessageRequest {
@@ -60,13 +64,16 @@ final case class SlackMessageUpdateRequest(
     unfurlLinks: Boolean,
     unfurlMedia: Boolean,
     parseMode: String) {
-  def asUrlParams: Seq[(String, String)] = Seq(
-    "text" -> text,
-    "attachments" -> Json.stringify(Json.toJson(attachments)),
-    "unfurl_links" -> unfurlLinks.toString,
-    "unfurl_media" -> unfurlMedia.toString,
-    "parse" -> parseMode
-  )
+  def asUrlParams: Seq[Param] = {
+    import com.keepit.slack.SlackAPI.SlackParams._
+    Seq(
+      "text" -> text,
+      "attachments" -> Json.stringify(Json.toJson(attachments)),
+      "unfurl_links" -> unfurlLinks.toString,
+      "unfurl_media" -> unfurlMedia.toString,
+      "parse" -> parseMode
+    )
+  }
 }
 
 object SlackMessageUpdateRequest {
