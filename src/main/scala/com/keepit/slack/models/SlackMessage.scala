@@ -6,10 +6,10 @@ import play.api.libs.json._
 
 import scala.util.{ Failure, Success, Try }
 
-object SlackApp {
-  val SLACK_CLIENT_ID = ???
-  val SLACK_CLIENT_SECRET = ???
-  val SLACK_COMMAND_TOKEN = SlackCommandToken(???)
+final case class SlackAppCredentials(id: SlackAppCredentials.Id, secret: SlackAppCredentials.Secret, commandToken: SlackCommandToken)
+object SlackAppCredentials {
+  final case class Id(value: String) extends AnyVal
+  final case class Secret(value: String) extends AnyVal
 }
 
 case class SlackTimestamp(value: String) extends Ordered[SlackTimestamp] { // channel-specific timestamp

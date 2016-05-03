@@ -21,8 +21,8 @@ object SlackAPI {
   val OK: String = "ok"
   val NoService: String = "No service"
   object SlackParams {
-    val CLIENT_ID = Param("client_id", SlackApp.SLACK_CLIENT_ID)
-    val CLIENT_SECRET = Param("client_secret", SlackApp.SLACK_CLIENT_SECRET)
+    implicit def fromId(id: SlackAppCredentials.Id): Param = Param("client_id", id.value)
+    implicit def fromSecret(secret: SlackAppCredentials.Secret): Param = Param("client_secret", secret.value)
     implicit def fromTuple(kv: (String, String)): Param = Param(kv._1, kv._2)
     implicit def fromTupleOpt(kv: (String, Option[String])): Param = Param(kv._1, kv._2 getOrElse "")
     implicit def fromInt(kv: (String, Int)): Param = Param(kv._1, kv._2.toString)
@@ -38,10 +38,10 @@ object SlackAPI {
 
   import SlackParams._
   def Test(token: SlackAccessToken) = Route("https://slack.com/api/api.test", token)
-  def OAuthAuthorize(scopes: Set[SlackAuthScope], state: SlackAuthState, teamId: Option[SlackTeamId], redirectUri: String) =
-    Route("https://slack.com/oauth/authorize", CLIENT_ID, scopes, state, "redirect_uri" -> redirectUri, "team" -> teamId.map(_.value))
-  def OAuthAccess(code: SlackAuthorizationCode, redirectUri: String) =
-    Route("https://slack.com/api/oauth.access", CLIENT_ID, CLIENT_SECRET, code, "redirect_uri" -> redirectUri)
+  def OAuthAuthorize(id: SlackAppCredentials.Id, scopes: Set[SlackAuthScope], state: SlackAuthState, teamId: Option[SlackTeamId], redirectUri: String) =
+    Route("https://slack.com/oauth/authorize", id, scopes, state, "redirect_uri" -> redirectUri, "team" -> teamId.map(_.value))
+  def OAuthAccess(id: SlackAppCredentials.Id, secret: SlackAppCredentials.Secret, code: SlackAuthorizationCode, redirectUri: String) =
+    Route("https://slack.com/api/oauth.access", id, secret, code, "redirect_uri" -> redirectUri)
   def Identify(token: SlackAccessToken) =
     Route("https://slack.com/api/auth.test", token)
   def UserIdentity(token: SlackAccessToken) =
@@ -106,10 +106,8 @@ trait SlackClient {
   def inviteToChannel(token: SlackAccessToken, invitee: SlackUserId, channelId: SlackChannelId): Future[Unit]
 }
 
-object SlackClient {
-}
-
 class SlackClientImpl(
+  app: SlackAppCredentials,
   httpClient: NingWSClient,
   implicit val ec: ExecutionContext)
     extends SlackClient {
@@ -147,7 +145,7 @@ class SlackClientImpl(
   }
 
   def processAuthorizationResponse(code: SlackAuthorizationCode, redirectUri: String): Future[SlackAuthorizationResponse] = {
-    slackCall[SlackAuthorizationResponse](SlackAPI.OAuthAccess(code, redirectUri))
+    slackCall[SlackAuthorizationResponse](SlackAPI.OAuthAccess(app.id, app.secret, code, redirectUri))
   }
 
   def updateMessage(token: SlackAccessToken, channelId: SlackChannelId, timestamp: SlackTimestamp, newMsg: SlackMessageUpdateRequest): Future[SlackMessageResponse] = {
