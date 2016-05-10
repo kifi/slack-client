@@ -7,7 +7,7 @@ You can get Juggle from maven central. The artifact is `slack-client_2.11` and t
 The current version is `0.2`. For example, if you are using __sbt__, just add this to your dependencies:
 
 ```
-"com.kifi" % "slack-client_2.11" % "0.2"
+libraryDependencies += "com.kifi" % "slack-client" %% "0.2"
 ```
 
 All classes are in in `com.kifi.slack`.
