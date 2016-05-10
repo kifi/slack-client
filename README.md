@@ -11,3 +11,5 @@ libraryDependencies += "com.kifi" % "slack-client" %% "0.2"
 ```
 
 All classes are in in `com.kifi.slack`.
+
+See our engineer blog for more background: https://medium.com/kifi-engineering/open-sourcing-our-slack-client-for-scala-c21dae411c92
