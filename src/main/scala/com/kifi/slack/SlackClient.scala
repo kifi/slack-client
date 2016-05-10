@@ -108,7 +108,7 @@ trait SlackClient {
 }
 
 class SlackClientImpl(
-  app: SlackAppCredentials,
+  app: Option[SlackAppCredentials],
   httpClient: NingWSClient,
   implicit val ec: ExecutionContext)
     extends SlackClient {
@@ -145,7 +145,9 @@ class SlackClientImpl(
   }
 
   def processAuthorizationResponse(code: SlackAuthorizationCode, redirectUri: String): Future[SlackAuthorizationResponse] = {
-    slackCall[SlackAuthorizationResponse](SlackAPI.OAuthAccess(app.id, app.secret, code, redirectUri))
+    app.map {
+      case SlackAppCredentials(id, secret, _) => slackCall[SlackAuthorizationResponse](SlackAPI.OAuthAccess(id, secret, code, redirectUri))
+    }.getOrElse(Future.failed(SlackFail.NoAppCredentials))
   }
 
   def updateMessage(token: SlackAccessToken, channelId: SlackChannelId, timestamp: SlackTimestamp, newMsg: SlackMessageUpdateRequest): Future[SlackMessageResponse] = {
