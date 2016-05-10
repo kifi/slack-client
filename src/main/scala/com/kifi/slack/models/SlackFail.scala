@@ -10,6 +10,7 @@ sealed abstract class SlackFail(val status: Int, val code: String, val extra: Js
   def asResponse = Status(status)(Json.obj("error" -> code, "extra" -> extra))
 }
 object SlackFail {
+  case object NoAppCredentials extends SlackFail(UNAUTHORIZED, "no_app_credentials")
   case object NoAuthCode extends SlackFail(BAD_REQUEST, "no_auth_code")
   case object InvalidAuthState extends SlackFail(BAD_REQUEST, "invalid_auth_state")
   case class MalformedPayload(payload: JsValue) extends SlackFail(BAD_REQUEST, "malformed_payload", payload)
