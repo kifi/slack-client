@@ -6,7 +6,7 @@ import com.kifi.slack.models._
 import com.kifi.slack.models.SlackAppCredentials.Id
 import play.api.http.Status
 import play.api.libs.json._
-import play.api.libs.ws.ning.NingWSClient
+import play.api.libs.ws.ahc.AhcWSClient
 import scala.language.implicitConversions
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -109,7 +109,7 @@ trait SlackClient {
 
 class SlackClientImpl(
   app: Option[SlackAppCredentials],
-  httpClient: NingWSClient,
+  httpClient: AhcWSClient,
   implicit val ec: ExecutionContext)
     extends SlackClient {
 

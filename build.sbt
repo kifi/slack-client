@@ -16,9 +16,9 @@ resolvers ++= Seq(
 libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _)
 
 libraryDependencies ++= Seq(
-  "com.typesafe.play" %% "play-json" % "2.3.1",
-  "org.specs2" %% "specs2" % "2.3.13",
-  "com.typesafe.play" %% "play-ws" % "2.4.3"
+  "com.typesafe.play" %% "play-json"      % "2.5.3",
+  "com.typesafe.play" %% "play-ws"        % "2.5.3",
+  "org.specs2"        %% "specs2-core"    % "3.8.3" % "test"
 )
 
 unmanagedSourceDirectories in Compile <+= (sourceDirectory in Compile, scalaBinaryVersion){
