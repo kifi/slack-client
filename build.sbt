@@ -2,7 +2,7 @@ organization := "com.kifi"
 
 name := "slack-client"
 
-version := "0.2"
+version := "0.3.0"
 
 scalaVersion := "2.11.8"
 
